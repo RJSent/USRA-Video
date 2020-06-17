@@ -14,6 +14,10 @@ MiniMagick.configure do |config| # Stops error when doing mean filtering, nonzer
   config.whiny = false
 end
 
+# If INPUT and OUTPUT dirs don't already exist, create them
+Dir.mkdir(INPUT_FRAME_DIR) unless Dir.exist?(INPUT_FRAME_DIR)
+Dir.mkdir(OUTPUT_FRAME_DIR) unless Dir.exist?(OUTPUT_FRAME_DIR)
+
 # Delete the screenshots we've taken. Otherwise it'll mess up the fps in later videos
 Dir.each_child(INPUT_FRAME_DIR) { |x| File.delete(INPUT_FRAME_DIR + x) }
 Dir.each_child(OUTPUT_FRAME_DIR) { |x| File.delete(OUTPUT_FRAME_DIR + x) }
