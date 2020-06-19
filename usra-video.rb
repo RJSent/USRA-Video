@@ -8,7 +8,7 @@ INPUT_VIDEO = 'Untitled 67.avi'.freeze
 OUTPUT_VIDEO = 'output.avi'.freeze
 INPUT_FRAME_DIR = 'input_frames/'.freeze
 OUTPUT_FRAME_DIR = 'output_frames/'.freeze
-THRESHOLD_PERCENT = '40%'.freeze
+THRESHOLD_PERCENT = '40%'.
 MAX_PROCESSES = Etc.nprocessors # Credit for multithreading to stackoverflow.com/questions/35387024
 MiniMagick.configure do |config| # Stops error when doing mean filtering, nonzero exit code being returned when executed
   config.whiny = false
@@ -26,7 +26,9 @@ Dir.each_child(OUTPUT_FRAME_DIR) { |x| File.delete(OUTPUT_FRAME_DIR + x) }
 # FIXME: As frame_rate isn't actually 30, duration * fps > num_frames. FFmpeg still works even if it's too large
 puts 'On step 1, extracting the images'
 video = FFMPEG::Movie.new(INPUT_VIDEO)
-video.screenshot(INPUT_FRAME_DIR + 'frame_%3d.png', { vframes: (video.duration * video.frame_rate).to_i, frame_rate: video.frame_rate }, { validate: false }) { |progress| puts "\tStep 1: #{(progress * 100).truncate(1)}%" } # output every frame as a screenshot to disk
+video.screenshot(INPUT_FRAME_DIR + 'frame_%3d.png',
+                 { vframes: (video.duration * video.frame_rate).to_i, frame_rate: video.frame_rate },
+                 { validate: false }) { |progress| puts "\tStep 1: #{(progress * 100).truncate(1)}%" }
 
 # Process the images
 puts "\nOn step 2, processing the images"
