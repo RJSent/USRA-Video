@@ -33,9 +33,7 @@ video.screenshot(INPUT_FRAME_DIR + 'frame_%3d.png',
 # Process the images
 puts "\nOn step 2, processing the images"
 frames = Dir.entries(INPUT_FRAME_DIR).reject { |f| File.directory? f } # Get array of files (and only files)
-
-count = 0 # TODO: remove count, replace with location of elements.first in frames
-frames.each_slice(MAX_PROCESSES) do |elements|
+frames.each_slice(MAX_PROCESSES).with_index(1) do |elements, i|
   elements.each do |frame|
     fork do
       image = MiniMagick::Image.open(INPUT_FRAME_DIR + frame)
@@ -54,8 +52,7 @@ frames.each_slice(MAX_PROCESSES) do |elements|
     end
   end
   Process.waitall
-  count += elements.size
-  puts "\tStep 2: #{((count / frames.size.to_f) * 100).truncate(1)}%"
+  puts "\tStep 2: #{(i * elements.size / frames.size.to_f * 100).truncate(1)}%"
 end
 
 # Convert procesed images to video
