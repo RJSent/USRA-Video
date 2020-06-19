@@ -35,7 +35,7 @@ frames = Dir.entries(INPUT_FRAME_DIR).reject { |f| File.directory? f } # Get arr
 count = 0 # TODO: remove count, replace with location of elements.first in frames
 frames.each_slice(MAX_PROCESSES) do |elements|
   elements.each do |frame|
-    fork {
+    fork do
       image = MiniMagick::Image.open(INPUT_FRAME_DIR + frame)
       # Square color values to improve contrast, get_pixels returns array of rows, containing array
       colors = image.get_pixels.flatten
@@ -49,7 +49,7 @@ frames.each_slice(MAX_PROCESSES) do |elements|
       image = image.threshold('40%')
       image = image.statistic('median', '6x6') # median filter removes speckles while keeping particles intact
       image.write(OUTPUT_FRAME_DIR + frame)
-    }
+    end
   end
   Process.waitall
   count += elements.size
