@@ -8,6 +8,7 @@ INPUT_VIDEO = 'Untitled 67.avi'.freeze
 OUTPUT_VIDEO = 'output.avi'.freeze
 INPUT_FRAME_DIR = 'input_frames/'.freeze
 OUTPUT_FRAME_DIR = 'output_frames/'.freeze
+THRESHOLD_PERCENT = '40%'.freeze
 MAX_PROCESSES = Etc.nprocessors # Credit for multithreading to stackoverflow.com/questions/35387024
 MiniMagick.configure do |config| # Stops error when doing mean filtering, nonzero exit code being returned when executed
   config.whiny = false
@@ -45,7 +46,7 @@ frames.each_slice(MAX_PROCESSES) do |elements|
       image = MiniMagick::Image.import_pixels(blob, image.width, image.height, 8, 'rgb')
       # Noise correction and thresholding
       image = image.statistic('mean', '3x3')
-      image = image.threshold('40%')
+      image = image.threshold(THRESHOLD_PERCENT)
       image = image.statistic('median', '6x6') # median filter removes speckles while keeping particles intact
       image.write(OUTPUT_FRAME_DIR + frame)
     end
