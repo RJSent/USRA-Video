@@ -8,7 +8,6 @@ INPUT_VIDEO = 'Untitled 67.avi'.freeze
 OUTPUT_VIDEO = 'output.avi'.freeze
 INPUT_FRAME_DIR = 'input_frames/'.freeze
 OUTPUT_FRAME_DIR = 'output_frames/'.freeze
-START_TIME = Process.clock_gettime(Process::CLOCK_MONOTONIC)
 MAX_PROCESSES = Etc.nprocessors # Credit for multithreading to stackoverflow.com/questions/35387024
 MiniMagick.configure do |config| # Stops error when doing mean filtering, nonzero exit code being returned when executed
   config.whiny = false
@@ -58,10 +57,4 @@ end
 
 # Convert procesed images to video
 puts "\nOn step 3, exporting the video"
-puts "Num frames: #{frames.size}"
-puts "Put video length: #{video.duration}"
 %x(ffmpeg -framerate #{frames.size / video.duration} -i #{OUTPUT_FRAME_DIR + 'frame_%3d.png'} -pix_fmt yuv420p '#{OUTPUT_VIDEO}')
-
-# Output end time
-END_TIME = Process.clock_gettime(Process::CLOCK_MONOTONIC)
-puts "This program ran for #{((END_TIME - START_TIME) / 60).truncate(1)} minutes"
