@@ -8,7 +8,7 @@ INPUT_VIDEO = 'Untitled 67.avi'.freeze
 OUTPUT_VIDEO = 'output.avi'.freeze
 INPUT_FRAME_DIR = 'input_frames/'.freeze
 OUTPUT_FRAME_DIR = 'output_frames/'.freeze
-THRESHOLD_PERCENT = '40%'.
+THRESHOLD_PERCENT = '40%'.freeze
 MAX_PROCESSES = Etc.nprocessors # Credit for multithreading to stackoverflow.com/questions/35387024
 MiniMagick.configure do |config| # Stops error when doing mean filtering, nonzero exit code being returned when executed
   config.whiny = false
@@ -60,4 +60,5 @@ end
 
 # Convert procesed images to video
 puts "\nOn step 3, exporting the video"
-%x(ffmpeg -framerate #{frames.size / video.duration} -i #{OUTPUT_FRAME_DIR + 'frame_%3d.png'} -pix_fmt yuv420p '#{OUTPUT_VIDEO}')
+average_framerate = frames.size / video.duration
+`ffmpeg -framerate #{average_framerate} -i #{OUTPUT_FRAME_DIR + 'frame_%3d.png'} -pix_fmt yuv420p '#{OUTPUT_VIDEO}'`
