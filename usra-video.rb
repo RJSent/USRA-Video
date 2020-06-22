@@ -39,9 +39,7 @@ frames.each_slice(MAX_PROCESSES).with_index(1) do |elements, i|
       image = MiniMagick::Image.open(INPUT_FRAME_DIR + frame)
       # Square color values to improve contrast, get_pixels returns array of rows, containing array
       colors = image.get_pixels.flatten
-      colors.map! do |color|
-        color**2 / 255
-      end
+      colors.map! { |color| color**2 / 255 }
       blob = colors.pack('C*') # Recreate the original image, credit to stackoverflow.com/questions/53764046
       image = MiniMagick::Image.import_pixels(blob, image.width, image.height, 8, 'rgb')
       # Noise correction and thresholding
